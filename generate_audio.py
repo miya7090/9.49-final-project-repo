@@ -3,7 +3,7 @@ from scipy.io import wavfile
 
 defaultAudioFolder = "Audio files/"
 
-defaultAudioSources = ["Power A.wav", "My I A.wav", "Comeback A.wav", "Speechless A.wav", "Real Thing A.wav"]
+defaultAudioSources = ["Power A.wav", "Comeback A.wav", "Speechless A.wav"]
 
 def mix_signals(signals, noiseFactor):
     ''' Mix the signals '''
