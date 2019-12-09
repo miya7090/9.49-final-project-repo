@@ -1,52 +1,52 @@
+# conda activate D:\condaEnvs\pyemmaEnv
+# or conda install pyemma and scikit-learn
+
 import numpy as np
 from scipy.io import wavfile
-from sklearn.decomposition import FastICA, PCA
 import matplotlib.pyplot as plt
+
+from sklearn.decomposition import FastICA, PCA
+import pyemma.msm as msm
+import msmtools.generation as msmgen # changed to github msmtools
+import msmtools.analysis as msmana # changed
+import pyemma.coordinates as coor
 
 import generate_audio as audio_gen
 
 np.random.seed(100)
-n_secs = 15
-X_max, X, trueAudio = audio_gen.load_audio_signals(n_secs, mixSignals=True) # load the received signals
+n_secs = 5
+X_max, X, trueAudio = audio_gen.load_audio_signals(n_secs, mixSignals=False) # load the received signals
 numSources = X.shape[1]
 
 # load other variables
 fs, n_samples = audio_gen.getAudioInfo(n_secs)
 time = np.linspace(0, n_secs, n_samples) # time vector
 
-''' ICA '''
-ica = FastICA(n_components=numSources)
-S_ = ica.fit_transform(X)  # Reconstruct signals
-A_ = ica.mixing_  # Get estimated mixing matrix
+''' Perform analyses! '''
+S_ = {}
+A_ = {}
+
+ica = FastICA(n_components=numSources)  # ICA!
+S_["ica"] = ica.fit_transform(X)  # Reconstruct signals
+A_["ica"] = ica.mixing_  # Get estimated mixing matrix
+
+pca = coor.pca(data = X) # PCA!
+pc = pca.eigenvectors
+S = pca.eigenvalues
+km = coor.cluster_kmeans(data = X, k=100, max_iter=100)
+tica = coor.tica(data = X) # TICA!
+ic = tica.eigenvectors
+L = tica.eigenvalues
+S_["pca"] = pca.get_output()[0]
+S_["tica"] = tica.get_output()[0]
 
 ''' Post-process the estimated signal '''
-S_ -= np.min(S_) # bound left edge at zero
-S_ *= (X_max / np.max(S_))*2 # bound right edge at max*2
-S_ -= X_max # shift downwards
+for estimate in S_.keys():
+    S_[estimate] -= np.min(S_[estimate]) # bound left edge at zero
+    S_[estimate] *= (X_max / np.max(S_[estimate]))*2 # bound right edge at max*2
+    S_[estimate] -= X_max # shift downwards
 
-# export the estimated signals
-export = S_.T.astype(np.int16)
-for observed in range(len(export)):
-    wavfile.write('Audio files/Ica_estimated_'+str(observed)+'.wav', fs, export[observed])
-
-# For comparison, compute PCA
-pca = PCA(n_components=numSources)
-H = pca.fit_transform(X)  # Reconstruct signals based on orthogonal components
-
-# #############################################################################
-# Plot results
-plt.figure()
-models = [X, trueAudio, S_, H]
-names = ['Observations (mixed signal)',
-         'True Sources',
-         'ICA recovered signals',
-         'PCA recovered signals']
-colors = ['red', 'steelblue', 'orange']
-for ii, (model, name) in enumerate(zip(models, names), 1):
-    plt.subplot(4, 1, ii)
-    plt.title(name)
-    for sig, color in zip(model.T, colors):
-        plt.plot(sig, color=color)
-
-plt.tight_layout()
-plt.show()
+    # export the estimated signals
+    export = S_[estimate].T.astype(np.int16)
+    for observed in range(len(export)):
+        wavfile.write('Audio files/'+estimate+'_estimated_'+str(observed)+'.wav', fs, export[observed])
