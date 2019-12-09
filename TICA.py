@@ -16,6 +16,7 @@ import generate_audio as audio_gen
 np.random.seed(20)
 n_secs = 5
 X_max, X, trueAudio = audio_gen.load_audio_signals(n_secs, mixSignals=True) # load in signals
+fs, n_samples = audio_gen.getAudioInfo(n_secs)
 # here our relevant quantities will be our X (observed signal, timesteps by num channels) and for reference we have our trueAudio (also timesteps by num channels)
 print(X_max, X.shape, trueAudio.shape)
 
@@ -35,3 +36,14 @@ Ytica = tica.get_output()[0] # tica outputs a list of length 1 for some reason s
 # you get an array of shape (timesamples x channels)
 
 print(Ypca.shape, Ytica.shape, print(np.max(Ypca), np.max(Ytica)))
+
+''' Post-process the estimated signal '''
+Ytica -= np.min(Ytica) # bound left edge at zero
+Ytica *= (X_max / np.max(Ytica))*2 # bound right edge at max*2
+Ytica -= X_max # shift downwards
+
+# export the estimated signals
+from scipy.io import wavfile
+export = Ytica.T.astype(np.int16)
+for observed in range(len(export)):
+    wavfile.write('Audio files/Tica_estimated_'+str(observed)+'.wav', fs, export[observed])

@@ -27,7 +27,7 @@ S_ -= X_max # shift downwards
 # export the estimated signals
 export = S_.T.astype(np.int16)
 for observed in range(len(export)):
-    wavfile.write('Audio files/source_estimated_'+str(observed)+'.wav', fs, export[observed])
+    wavfile.write('Audio files/Ica_estimated_'+str(observed)+'.wav', fs, export[observed])
 
 # For comparison, compute PCA
 pca = PCA(n_components=numSources)
