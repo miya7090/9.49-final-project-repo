@@ -5,6 +5,10 @@ defaultAudioFolder = "Audio files/"
 
 defaultAudioSources = ["Power A.wav", "Comeback A.wav", "Speechless A.wav"]
 
+#defaultAudioFolder = "Do not sync_audio files/edited_what kind of future/"
+#defaultAudioSources = ["Cdhk97.wav","Eng.wav","Enigmaticstar.wav","Fluffywoozi.wav","Moe.wav","Seongjijun.wav","Vobo.wav"]
+#defaultAudioSources = ["Cdhk97.wav","Moe.wav","Seongjijun.wav"]
+
 def mix_signals(signals, noiseFactor):
     ''' Mix the signals '''
     numSignals = signals.shape[1]
