@@ -53,7 +53,7 @@ def load_audio_signals(n_secs, audioFolder = defaultAudioFolder, audioSources = 
     print("Pre-processing signals of shape", X.shape)
     X_max = np.max(X) # will map to this max later
     X = np.subtract(X, X.mean(axis=0)) # de-mean
-    X = np.divide(X, X.std(axis=0)) # de-std
+    X = np.divide(X, X.std(axis=0)) # de-std # to-do: replace with denoise through PCA
 
     return X_max, X, audioData
 
