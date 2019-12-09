@@ -14,8 +14,8 @@ import matplotlib.pylab as plt
 
 import generate_audio as audio_gen
 np.random.seed(20)
-n_secs = 5
-X_max, X, trueAudio = audio_gen.load_audio_signals(n_secs, mixSignals=True) # load in signals
+n_secs = 10
+X_max, X, trueAudio = audio_gen.load_audio_signals(n_secs, mixSignals=False) # load in signals
 fs, n_samples = audio_gen.getAudioInfo(n_secs)
 # here our relevant quantities will be our X (observed signal, timesteps by num channels) and for reference we have our trueAudio (also timesteps by num channels)
 print(X_max, X.shape, trueAudio.shape)
@@ -24,8 +24,11 @@ print(X_max, X.shape, trueAudio.shape)
 pca = coor.pca(data = X)
 pc = pca.eigenvectors
 S = pca.eigenvalues
-km = coor.cluster_kmeans(data = X, k=100)
+print("thresh0")
+km = coor.cluster_kmeans(data = X, k=10, max_iter=100)
+print("threshA")
 tica = coor.tica(data = X)
+print("threshB")
 ic = tica.eigenvectors
 L = tica.eigenvalues
 
@@ -46,4 +49,4 @@ Ytica -= X_max # shift downwards
 from scipy.io import wavfile
 export = Ytica.T.astype(np.int16)
 for observed in range(len(export)):
-    wavfile.write('Audio files/Tica_estimated_'+str(observed)+'.wav', fs, export[observed])
+    wavfile.write('Audio files/realworld_Tica_estimated_'+str(observed)+'.wav', fs, export[observed])
