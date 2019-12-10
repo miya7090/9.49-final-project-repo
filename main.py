@@ -33,7 +33,7 @@ A_["ica"] = ica.mixing_  # Get estimated mixing matrix
 pca = coor.pca(data = X) # PCA!
 pc = pca.eigenvectors
 S = pca.eigenvalues
-km = coor.cluster_kmeans(data = X, k=100, max_iter=100)
+km = coor.cluster_kmeans(data = X, k=1000, max_iter=100)
 tica = coor.tica(data = X) # TICA!
 ic = tica.eigenvectors
 L = tica.eigenvalues

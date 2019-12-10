@@ -1,13 +1,9 @@
 import numpy as np
 from scipy.io import wavfile
 
-#defaultAudioFolder = "Audio files/"
-
+defaultAudioFolder = "Audio files/"
 #defaultAudioSources = ["Power A.wav", "Comeback A.wav", "Speechless A.wav"]
-
-defaultAudioFolder = "Do not sync_audio files/edited_what kind of future/"
-#defaultAudioSources = ["Cdhk97.wav","Eng.wav","Enigmaticstar.wav","Fluffywoozi.wav","Moe.wav","Seongjijun.wav","Vobo.wav"]
-defaultAudioSources = ["Cdhk97.wav","Moe.wav","Seongjijun.wav"]
+defaultAudioSources = ["Source recording L.wav","Source recording R.wav"]
 
 def mix_signals(signals, noiseFactor):
     ''' Mix the signals '''
@@ -31,6 +27,7 @@ def load_audio_signals(n_secs, audioFolder = defaultAudioFolder, audioSources = 
     ''' Begin loading the signals '''
     audioData = []
     for filename in audioSources: # iterate through each audio file
+        print("Loading from", audioFolder+filename)
         fs, data = wavfile.read(audioFolder+filename) # load audio data
         if fs != framerate:
             raise ValueError # all framerates must match
