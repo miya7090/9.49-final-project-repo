@@ -2,7 +2,6 @@ import numpy as np
 from scipy.io import wavfile
 
 defaultAudioFolder = "Audio files/"
-#defaultAudioSources = ["Power A.wav", "Comeback A.wav", "Speechless A.wav"]
 defaultAudioSources = ["Source recording L.wav","Source recording R.wav"]
 
 def mix_signals(signals, noiseFactor):

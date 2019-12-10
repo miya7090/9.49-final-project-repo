@@ -1,5 +1,5 @@
 # conda activate D:\condaEnvs\pyemmaEnv
-# or conda install pyemma and scikit-learn
+# or, conda install pyemma and scikit-learn
 
 import numpy as np
 from scipy.io import wavfile
